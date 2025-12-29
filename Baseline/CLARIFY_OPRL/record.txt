@@ -1,0 +1,95 @@
+==================================================
+Starting new experiment: cheetah-run rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 49.82, std: 29.01
+Max return: 201.85, min: 0.00
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: cheetah-run_backward rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 47.40, std: 28.85
+Max return: 203.47, min: 0.55
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: cheetah-walk rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 231.09, std: 117.55
+Max return: 815.70, min: 0.02
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: cheetah-walk_backward rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 218.41, std: 120.33
+Max return: 777.32, min: 2.75
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: walker-run rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 87.28, std: 14.55
+Max return: 175.53, min: 17.60
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: walker-stand rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 385.32, std: 48.20
+Max return: 547.91, min: 95.57
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: walker-walk rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 189.20, std: 45.77
+Max return: 407.77, min: 18.09
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: walker-flip medium-expert
+5000 trajectories, 5000000 timesteps found
+Average return: 238.21, std: 45.42
+Max return: 394.96, min: 19.93
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: quadruped-walk rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 309.07, std: 96.83
+Max return: 592.71, min: 0.87
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: quadruped-run rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 318.95, std: 90.03
+Max return: 501.11, min: 0.93
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: quadruped-stand rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 646.71, std: 180.52
+Max return: 995.85, min: 1.87
+z-dim: 16
+==================================================
+
+==================================================
+Starting new experiment: quadruped-jump rnd
+5000 trajectories, 5000000 timesteps found
+Average return: 564.69, std: 163.31
+Max return: 849.98, min: 1.17
+z-dim: 16
+==================================================

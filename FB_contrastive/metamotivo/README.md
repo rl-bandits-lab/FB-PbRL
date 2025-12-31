@@ -5,10 +5,9 @@
 
 Run FB pretraining on DMC environments using offline RND datasets.
 
-### Example: Cheetah
 ```bash
 python fb_train_dmc.py \
-  --domain_name cheetah \
+  --domain_name walker \
   --dataset_root ./datasets_dmc \
   --dataset_type rnd \
   --use_wandb

@@ -60,7 +60,6 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 matplotlib==3.9.4
 mdurl==0.1.2
-metaworld==0.1.0
 mjrl==1.0.0
 mo-gymnasium==1.0.0
 mpmath==1.3.0

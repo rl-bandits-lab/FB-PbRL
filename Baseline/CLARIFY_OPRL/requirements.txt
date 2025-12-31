@@ -22,7 +22,6 @@ dill==0.4.0
 dm-env==1.6
 dm-tree==0.1.8
 dm_control==1.0.31
-dmc2gym @ file:///home/jxea/workspace/TdRL2/dmc2gym
 docker-pycreds==0.4.0
 docstring_parser==0.17.0
 etils==1.5.2

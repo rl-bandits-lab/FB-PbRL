@@ -97,7 +97,7 @@ def load_preference_dataset(
     if segment_length == 200:
         fname = f"{domain_task}_pref_dataset.pkl"
     else:
-        fname = f"{domain_task}_pref_dataset_K_{segment_length}.pkl"
+        fname = f"{domain_task}_pref_dataset_Pool400_K{segment_length}.pkl"
     fpath = os.path.join(pref_dir, fname)
 
     if not os.path.exists(fpath):
@@ -336,7 +336,9 @@ class Workspace:
 
         domain_task = f"{self.cfg.domain_name}-{self.cfg.task_name}"
         print(f"[INFO] Loading preference dataset for {domain_task}")
-        pref_type = "LIRE_dmc_preference_dataset" if self.cfg.dataset_type == "LIRE" else "rnd_dmc_preference_dataset"
+        #pref_type = "LIRE_dmc_preference_dataset" if self.cfg.dataset_type == "LIRE" else "rnd_dmc_preference_dataset"
+        
+        pref_type = "LIRE_dmc_preference_dataset" if self.cfg.dataset_type == "LIRE" else "rnd_dmc_preference_dataset_zero_shot"
         self.pref_dataset = load_preference_dataset(domain_task, self.cfg.dataset_path, pref_type, self.cfg.seq_length, self.cfg.num_pairs)
 
 

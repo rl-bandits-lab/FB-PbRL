@@ -29,3 +29,13 @@ python fb_finetune_dmc_contrastive_hilp_dmc.py \
   --use_wandb \
   --contrastive_coef 100.0 \
 ```
+
+```bash
+CUDA_VISIBLE_DEVICES=0 python fb_finetune_dmc_contrastive_hilp_dmc_zero_shot.py \
+    --domain_name cheetah --task_name run \
+    --dataset_type rnd --dataset_path ./datasets_dmc \
+    --load_dir ./tmp_fbcpr/3NMRPDZEWL/checkpoint \
+    --num_train_steps 1000000 --eval_every_steps 10000 \
+    --device cuda --use_contrastive --use_dynamic_contrastive_z \
+    --use_wandb --contrastive_coef 100.0 --seq_length 25 \
+```

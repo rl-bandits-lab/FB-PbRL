@@ -236,6 +236,8 @@ def experiment(output_dir, variant):
         name += f'-ctx_{args.K}-seed_{args.seed}-{time.strftime("%Y%m%d-%H%M%S")}'
     wandb.init(project='CLARIFY_policy', name=name, config=variant)
 
+    best_avg = -np.inf
+    best_std = None
 
     # train offline RL agent
     for offline_update_idx in tqdm(range(offline_rl_update_num)):
@@ -252,6 +254,9 @@ def experiment(output_dir, variant):
                 video_path=os.path.join(output_dir, 'video'), 
                 exp_name=str(offline_update_idx), 
             )
+            if avg_return > best_avg:
+                best_avg = avg_return
+                best_std = std_return
             normalized_score = env.get_normalized_score(avg_return) * 100 if env_type == 'd4rl' else avg_return
             print(f't: {offline_update_idx}, return: {avg_return}, std: {std_return}, normalized_score: {normalized_score}, success: {eval_success}')
             wandb.log({
@@ -276,11 +281,11 @@ def experiment(output_dir, variant):
     if not os.path.exists(csv_path):
         with open(csv_path, "w", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["exp_name", "avg_return", "std_return", "seed"])
+            writer.writerow(["exp_name", "best_avg_return", "best_std_return", "seed"])
 
     with open(csv_path, "a", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow([name, avg_return, std_return, seed])
+        writer.writerow([name, best_avg, best_std, seed])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

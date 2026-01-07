@@ -280,7 +280,7 @@ class Workspace:
                 while not time_step.last():
                     with torch.no_grad(), eval_mode(self.agent._model):
                         obs = torch.tensor(
-                            time_step.observation["observations"].reshape(1, -1),
+                            time_step.observation.reshape(1, -1),
                             device=self.agent.device,
                             dtype=torch.float32,
                         )

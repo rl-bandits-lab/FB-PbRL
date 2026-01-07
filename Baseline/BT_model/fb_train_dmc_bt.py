@@ -18,7 +18,7 @@ from metamotivo.nn_models import eval_mode
 from bt_model import reward_model as rem
 from tqdm import tqdm
 import time
-from dm_control import suite
+#from dm_control import suite
 import random
 from pathlib import Path
 import wandb
@@ -28,6 +28,7 @@ import mujoco
 import warnings
 #import tyro
 import argparse
+from url_benchmark import dmc
 
 ALL_TASKS = {
     "walker": [
@@ -49,14 +50,10 @@ def create_agent(
 ) -> FBAgent:
     if domain_name not in ["walker", "pointmass", "cheetah", "quadruped"]:
         raise RuntimeError('FB configuration defined only for "walker", "pointmass", "cheetah", "quadruped"')
-    env = suite.load(
-        domain_name=domain_name,
-        task_name=task_name,
-        environment_kwargs={"flat_observation": True},
-    )
+    env = dmc.make(f"{domain_name}_{task_name}")
 
     agent_config = FBAgentConfig()
-    agent_config.model.obs_dim = env.observation_spec()["observations"].shape[0]
+    agent_config.model.obs_dim = env.observation_spec().shape[0]
     agent_config.model.action_dim = env.action_spec().shape[0]
     agent_config.model.device = device
     agent_config.model.norm_obs = False
@@ -275,11 +272,7 @@ class Workspace:
         total = 0
         for task in self.cfg.eval_tasks:
             z = self.reward_inference(task).reshape(1, -1)
-            eval_env = suite.load(
-                domain_name=self.cfg.domain_name,
-                task_name=task,
-                environment_kwargs={"flat_observation": True},
-            )
+            eval_env = dmc.make(f"{self.cfg.domain_name}_{self.cfg.task_name}")
             num_ep = self.cfg.num_eval_episodes
             total_reward = np.zeros((num_ep,), dtype=np.float64)
             for ep in range(num_ep):

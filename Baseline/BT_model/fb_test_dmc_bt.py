@@ -9,11 +9,12 @@ import os
 import math
 import pickle
 from tqdm import tqdm
-from dm_control import suite
+#from dm_control import suite
 import mujoco
 from metamotivo.fb_bt.agent import FBAgent
 from metamotivo.nn_models import eval_mode
 from bt_model import reward_model as rem
+from url_benchmark import dmc
 # ------------------------------------------------
 # CLI
 # ------------------------------------------------
@@ -154,15 +155,11 @@ def main():
     print(ds['action'].shape)
 
     # -- 2. 建立線上測試環境
-    eval_env = suite.load(
-        domain_name=args.domain_name,
-        task_name=args.task_name,
-        environment_kwargs={"flat_observation": True},
-    )
+    eval_env = dmc.make(f"{args.domain_name}_{args.task_name}")
     print(f"[INFO] Evaluating on '{args.domain_name}-{args.task_name}'  episodes={args.episodes}")
 
     #returns: list[float] = []
-    reward_model = rem.RewardModel(eval_env, eval_env.observation_spec()["observations"].shape[0], eval_env.action_spec().shape[0], ensemble_size=3, lr=3e-4,
+    reward_model = rem.RewardModel(eval_env, eval_env.env.observation_spec().shape[0], eval_env.action_spec().shape[0], ensemble_size=3, lr=3e-4,
                                     activation="tanh", device=args.device)
     reward_model.load_model(f'bt_model/reward_model_logs/{args.domain_name}-{args.task_name}/seed_{args.seed}/models/reward_model.pt')
     print(f"Loaded BT reward model from bt_model/reward_model_logs/{args.domain_name}-{args.task_name}/seed_{args.seed}/models/reward_model.pt")

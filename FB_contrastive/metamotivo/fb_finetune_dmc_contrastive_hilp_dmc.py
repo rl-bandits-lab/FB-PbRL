@@ -86,12 +86,45 @@ def load_lire_dataset(base_path: str, env_name: str, data_quality: float = 1.0) 
 
     return storage
 
+def inject_preference_noise(labels: np.ndarray, noise: float):
+
+    if noise <= 0.0:
+        return labels
+
+    p = noise
+    for i in range(len(labels)):
+        if random.random() >= p:
+            continue
+
+        a, b = labels[i][0], labels[i][1]
+
+        if a == 1 and b == 0:
+            if random.random() < 0.5:
+                labels[i][0], labels[i][1] = 0, 1
+            else:
+                labels[i][0], labels[i][1] = 0.5, 0.5
+
+        elif a == 0 and b == 1:
+            if random.random() < 0.5:
+                labels[i][0], labels[i][1] = 1, 0
+            else:
+                labels[i][0], labels[i][1] = 0.5, 0.5
+
+        else:
+            if random.random() < 0.5:
+                labels[i][0], labels[i][1] = 1, 0
+            else:
+                labels[i][0], labels[i][1] = 0, 1
+
+    return labels
+
 def load_preference_dataset(
     domain_task: str,
     dataset_path: str,
     dataset_type: str,
     segment_length: int,
     num_pairs: int | None = None,
+    noise: float = 0.0,
 ) -> dict:
     pref_dir = os.path.join(dataset_path, dataset_type)
     if segment_length == 200:
@@ -106,9 +139,6 @@ def load_preference_dataset(
     with open(fpath, "rb") as f:
         batch = pickle.load(f)
 
-    # -----------------
-    # Slice pairs (forward order)
-    # -----------------
     N, K, *_ = batch["next_observations"].shape
     if num_pairs is not None:
         num_pairs = min(num_pairs, N)
@@ -117,7 +147,12 @@ def load_preference_dataset(
             "next_observations_2": batch["next_observations_2"][:num_pairs],
             "labels": batch["labels"][:num_pairs],
         }
-
+    labels = batch["labels"]
+    if noise > 0.0:
+        labels = inject_preference_noise(labels, noise)
+        batch["labels"] = labels
+        print(f"[PreferenceDataset] Injected noise p={noise}")
+        
     print(
         f"[PreferenceDataset] Loaded {len(batch['labels'])}/{N} pairs, "
         f"segment_length={K}"
@@ -157,7 +192,7 @@ def create_agent(
     f"{domain_name}_{task_name}",
     obs_type="states",
     frame_stack=1,
-    action_repeat=1,   # ← 跟 dataset 一致
+    action_repeat=1,
     seed=0,
 )
     agent_config = FBAgentConfig()
@@ -186,10 +221,8 @@ def apply_train_cfg_to_agent(
     agent_cfg: FBAgentConfig,
     train_cfg: TrainConfig,
 ):
-    # ----- model -----
     agent_cfg.model.archi.z_dim = train_cfg.z_dim
 
-    # ----- training -----
     agent_cfg.train.batch_size = train_cfg.batch_size
     agent_cfg.train.batch_size_contrastive = train_cfg.batch_size_contrastive
     agent_cfg.train.seq_length = train_cfg.seq_length
@@ -305,6 +338,8 @@ class TrainConfig:
     wandb_pname: Optional[str] = "fb_train_dmc"
     wandb_name_prefix: Optional[str] = None
 
+    noise: float = 0.0
+
     def __post_init__(self):
         if self.eval_tasks is None:
             self.eval_tasks = [self.task_name]
@@ -337,7 +372,7 @@ class Workspace:
         domain_task = f"{self.cfg.domain_name}-{self.cfg.task_name}"
         print(f"[INFO] Loading preference dataset for {domain_task}")
         pref_type = "LIRE_dmc_preference_dataset" if self.cfg.dataset_type == "LIRE" else "rnd_dmc_preference_dataset"
-        self.pref_dataset = load_preference_dataset(domain_task, self.cfg.dataset_path, pref_type, self.cfg.seq_length, self.cfg.num_pairs)
+        self.pref_dataset = load_preference_dataset(domain_task, self.cfg.dataset_path, pref_type, self.cfg.seq_length, self.cfg.num_pairs, noise=self.cfg.noise)
 
 
         if self.cfg.dataset_type == "rnd":
@@ -349,12 +384,12 @@ class Workspace:
         print(f"[ReplayBuffer] Loaded transitions = {len(self.replay_buffer['train'])}")
         #self.recon_env = dmc.make(f"{self.cfg.domain_name}_{self.cfg.task_name}")
         self.recon_env = dmc.make(
-    f"{self.cfg.domain_name}_{self.cfg.task_name}",
-    obs_type="states",
-    frame_stack=1,
-    action_repeat=1,   # ← 跟 dataset 一致
-    seed=0,
-)
+            f"{self.cfg.domain_name}_{self.cfg.task_name}",
+            obs_type="states",
+            frame_stack=1,
+            action_repeat=1,
+            seed=0,
+        )
         self.agent.set_recon_env(self.recon_env)
 
         if self.cfg.use_wandb:
@@ -419,12 +454,12 @@ class Workspace:
             #eval_env = suite.load(domain_name=self.cfg.domain_name, task_name=task, environment_kwargs={"flat_observation": True})
             #eval_env  = dmc.make(f"{self.cfg.domain_name}_{task}")
             eval_env = dmc.make(
-    f"{self.cfg.domain_name}_{task}",
-    obs_type="states",
-    frame_stack=1,
-    action_repeat=1,   # ← 跟 dataset 一致
-    seed=0,
-)
+                f"{self.cfg.domain_name}_{task}",
+                obs_type="states",
+                frame_stack=1,
+                action_repeat=1,
+                seed=0,
+            )
             num_ep = self.cfg.num_eval_episodes
             total_reward = np.zeros((num_ep,), dtype=np.float64)
             ep_lengths = np.zeros((num_ep,), dtype=np.int32)

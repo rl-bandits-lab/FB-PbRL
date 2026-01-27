@@ -25,7 +25,7 @@ from typing import List
 import mujoco
 import warnings
 import tyro
-from dmc_tasks import dmc
+from url_benchmark import dmc
 import os
 import pickle
 

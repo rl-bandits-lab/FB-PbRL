@@ -191,20 +191,21 @@ def save_pref_dataset(pref_dataset, save_path, seg_len=200):
 #  Main Execution
 # ============================================================
 if __name__ == "__main__":
-    dataset_path = "./datasets"
-    domain_name = "point_mass_maze"
-    task = "reach_top_right"
+    dataset_path = "./datasets_dmc"
+    domain_name = "walker"
+    task = "walk"
     expl_agent = "rnd"
 
     print(task)
-    trajectories = load_rnd_dataset_as_trajectories(dataset_path, domain_name, expl_agent, task, num_episodes=10000)
+    trajectories = load_rnd_dataset_as_trajectories(dataset_path, domain_name, expl_agent, task, num_episodes=5000)
 
     rewards = [np.sum(traj["rewards"]) for traj in trajectories]
     lengths = [len(traj["rewards"]) for traj in trajectories]
 
-    pref_dataset = build_pref_dataset(trajectories, num_pairs=2000, seg_len=200, teacher_eps_skip=0)
+    pref_dataset = build_pref_dataset(trajectories, num_pairs=2000, seg_len=200, teacher_eps_skip=0.05)
 
-    save_path = f"hilp/{domain_name}-{task}_pref_dataset.pkl"
+    save_path = f"datasets_dmc/rnd_dmc_preference_dataset/{domain_name}-{task}_pref_dataset.pkl"
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
     batch = save_pref_dataset(pref_dataset, save_path, seg_len=200)
 
     print(batch.keys())

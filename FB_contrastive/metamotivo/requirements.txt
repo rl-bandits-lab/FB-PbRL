@@ -14,6 +14,7 @@ dm_control==1.0.31
 docstring_parser==0.16
 etils==1.5.2
 eval_type_backport==0.2.2
+Farama-Notifications==0.0.4
 fasteners==0.19
 filelock==3.18.0
 fsspec==2025.5.1
@@ -34,6 +35,7 @@ lxml==5.4.0
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
+metaworld @ git+https://github.com/Farama-Foundation/Metaworld.git@a98086ababc81560772e27e7f63fe5d120c4cc50
 mjrl==1.0.0
 mpmath==1.3.0
 mujoco==3.3.3
@@ -78,6 +80,7 @@ pyparsing==3.2.3
 PyYAML==6.0.2
 requests==2.32.4
 rich==14.0.0
+rlkit @ git+https://github.com/rail-berkeley/rlkit.git@ac45a9db24b89d97369bef302487273bcc3e3d84
 safetensors==0.5.3
 scipy==1.13.1
 sentry-sdk==2.30.0

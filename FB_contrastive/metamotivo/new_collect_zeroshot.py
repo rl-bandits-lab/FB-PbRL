@@ -240,19 +240,19 @@ if __name__ == "__main__":
     SEED = 0
     set_seed(SEED)
     
-    dataset_path = "./datasets"
-    domain_name = "point_mass_maze"
-    task = "reach_top_left"
+    dataset_path = "./datasets_dmc"
+    domain_name = "walker"
+    task = "walk"
     expl_agent = "rnd"
     print(domain_name, task)
 
     POOL_SIZE = 400
     NUM_PAIRS = 2000 
     SEG_LEN = 25
-    TEACHER_SKIP = 0
+    TEACHER_SKIP = 0.05
 
     trajectories = load_rnd_dataset_as_trajectories(
-        dataset_path, domain_name, expl_agent, task, num_episodes=10000
+        dataset_path, domain_name, expl_agent, task, num_episodes=5000
     )
     
     if not trajectories:
@@ -276,4 +276,5 @@ if __name__ == "__main__":
     )
 
     save_path = f"zero_shot/{domain_name}-{task}_pref_dataset_Pool{POOL_SIZE}_K{SEG_LEN}.pkl"
+    Path(save_path).parent.mkdir(parents=True, exist_ok=True)
     batch = save_pref_dataset(pref_dataset, save_path)

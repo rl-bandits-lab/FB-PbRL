@@ -157,7 +157,7 @@ def create_agent(
     f"{domain_name}_{task_name}",
     obs_type="states",
     frame_stack=1,
-    action_repeat=1,   # ← 跟 dataset 一致
+    action_repeat=1,
     seed=0,
 )
     agent_config = FBAgentConfig()

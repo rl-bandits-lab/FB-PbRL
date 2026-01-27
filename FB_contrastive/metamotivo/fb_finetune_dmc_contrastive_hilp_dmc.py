@@ -87,7 +87,9 @@ def load_lire_dataset(base_path: str, env_name: str, data_quality: float = 1.0) 
     return storage
 
 def inject_preference_noise(labels: np.ndarray, noise: float):
-
+    """
+    labels: shape (N, 2), entries in {0, 1, 0.5}
+    """
     if noise <= 0.0:
         return labels
 
@@ -98,18 +100,21 @@ def inject_preference_noise(labels: np.ndarray, noise: float):
 
         a, b = labels[i][0], labels[i][1]
 
+        # case 1: (1, 0)
         if a == 1 and b == 0:
             if random.random() < 0.5:
                 labels[i][0], labels[i][1] = 0, 1
             else:
                 labels[i][0], labels[i][1] = 0.5, 0.5
 
+        # case 2: (0, 1)
         elif a == 0 and b == 1:
             if random.random() < 0.5:
                 labels[i][0], labels[i][1] = 1, 0
             else:
                 labels[i][0], labels[i][1] = 0.5, 0.5
 
+        # case 3: tie (0.5, 0.5)
         else:
             if random.random() < 0.5:
                 labels[i][0], labels[i][1] = 1, 0
@@ -139,6 +144,9 @@ def load_preference_dataset(
     with open(fpath, "rb") as f:
         batch = pickle.load(f)
 
+    # -----------------
+    # Slice pairs (forward order)
+    # -----------------
     N, K, *_ = batch["next_observations"].shape
     if num_pairs is not None:
         num_pairs = min(num_pairs, N)
@@ -192,7 +200,7 @@ def create_agent(
     f"{domain_name}_{task_name}",
     obs_type="states",
     frame_stack=1,
-    action_repeat=1,
+    action_repeat=1,   # ← 跟 dataset 一致
     seed=0,
 )
     agent_config = FBAgentConfig()
@@ -221,8 +229,10 @@ def apply_train_cfg_to_agent(
     agent_cfg: FBAgentConfig,
     train_cfg: TrainConfig,
 ):
+    # ----- model -----
     agent_cfg.model.archi.z_dim = train_cfg.z_dim
 
+    # ----- training -----
     agent_cfg.train.batch_size = train_cfg.batch_size
     agent_cfg.train.batch_size_contrastive = train_cfg.batch_size_contrastive
     agent_cfg.train.seq_length = train_cfg.seq_length
@@ -240,49 +250,6 @@ def apply_train_cfg_to_agent(
 
     agent_cfg.compile = train_cfg.compile
     agent_cfg.cudagraphs = train_cfg.cudagraphs
-
-# -----------------
-# Configs
-# -----------------
-'''@dataclasses.dataclass
-class TrainConfig:
-    seed: int = 0
-    domain_name: str = "walker"
-    task_name: str = "walk"
-    dataset_type: str = "rnd" # "rnd" or "LIRE"
-    dataset_path: str = "./"
-    expl_agent: str = "rnd"
-    num_train_steps: int = 1_000_000
-    load_n_episodes: int = 5000
-    log_every_updates: int = 10000
-    work_dir: Optional[str] = None
-    checkpoint_every_steps: int = 1000000
-    num_eval_episodes: int = 10
-    num_inference_samples: int = 50000
-    eval_every_steps: int = 100000
-    eval_tasks: Optional[List[str]] = None
-    compile: bool = False
-    cudagraphs: bool = False
-    device: str = "cuda"
-    use_wandb: bool = False
-    wandb_ename: Optional[str] = None
-    wandb_gname: Optional[str] = None
-    wandb_pname: Optional[str] = "fb_train_dmc"
-    wandb_name_prefix: Optional[str] = None
-    beta: float = 1.0
-    use_contrastive: bool = False
-    use_dynamic_contrastive_z: bool = False
-    contrastive_coef: float = 1.0
-    quad_loss_coef: float = 1.0
-    reg_coefficient: float = 0.0
-    load_dir: str | None = None
-    recon_coef: float = 0.0
-    recon_num_trajs: int = 10
-    recon_traj_len: int = 200
-    recon_interval: int = 5000
-    q_loss_coef: float = 0.0
-    dataset_quality: float = 1.0
-'''
 
 @dataclasses.dataclass
 class TrainConfig:
@@ -384,12 +351,12 @@ class Workspace:
         print(f"[ReplayBuffer] Loaded transitions = {len(self.replay_buffer['train'])}")
         #self.recon_env = dmc.make(f"{self.cfg.domain_name}_{self.cfg.task_name}")
         self.recon_env = dmc.make(
-            f"{self.cfg.domain_name}_{self.cfg.task_name}",
-            obs_type="states",
-            frame_stack=1,
-            action_repeat=1,
-            seed=0,
-        )
+    f"{self.cfg.domain_name}_{self.cfg.task_name}",
+    obs_type="states",
+    frame_stack=1,
+    action_repeat=1,   # ← 跟 dataset 一致
+    seed=0,
+)
         self.agent.set_recon_env(self.recon_env)
 
         if self.cfg.use_wandb:

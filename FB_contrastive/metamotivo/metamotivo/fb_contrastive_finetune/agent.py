@@ -190,8 +190,8 @@ class FBAgent:
         return z_expert
 
     def encode_expert_contra(self, next_obs: torch.Tensor, batch_size=256, seq_len=200):
-
         B_expert = self._model._backward_map(next_obs)  # batch x d
+        
         B_expert = B_expert.view(
             batch_size,
             seq_len,
@@ -207,7 +207,7 @@ class FBAgent:
         seq_len = self.cfg.train.seq_length
         device = self.device
 
-        indices = np.random.choice(len(pref_dataset['labels']), size=(batch_size, 2), replace=False)
+        indices = np.random.choice(len(pref_dataset['labels']), size=(batch_size, 1), replace=False)
         indices1= indices[:, 0]
 
         next_states1 = torch.FloatTensor(pref_dataset['next_observations'][indices1]).to(device)
@@ -233,9 +233,19 @@ class FBAgent:
         z_anchor = self.z
         #pos = torch.cat((z_plus[lb], z_minus[rb]), dim=0)
         #neg = torch.cat((z_minus[lb], z_plus[rb]), dim=0)
-        pos = torch.cat([z_plus[lb], z_minus[rb], z_plus[eb], z_minus[eb],], dim=0)
+        pos = torch.cat([
+            z_plus[lb],
+            z_minus[rb],
+            z_plus[eb],
+            z_minus[eb],
+        ], dim=0)
 
-        neg = torch.cat([z_minus[lb], z_plus[rb], z_minus[eb], z_plus[eb],], dim=0)
+        neg = torch.cat([
+            z_minus[lb],
+            z_plus[rb],
+            z_minus[eb],
+            z_plus[eb],
+        ], dim=0)
         sim_pos = F.cosine_similarity(z_anchor.expand_as(pos), pos)
         sim_neg = F.cosine_similarity(z_anchor.expand_as(neg), neg)
         triplet_loss = -torch.log(
@@ -409,9 +419,21 @@ class FBAgent:
             tau = max(0.05, 0.2 * np.exp(0 / 20000))
             triplet_losses = []
             z_anchor = self.z
-            pos = torch.cat((z_plus[lb], z_minus[rb]), dim=0)
-            neg = torch.cat((z_minus[lb], z_plus[rb]), dim=0)
+            #pos = torch.cat((z_plus[lb], z_minus[rb]), dim=0)
+            #neg = torch.cat((z_minus[lb], z_plus[rb]), dim=0)
+            pos = torch.cat([
+                z_plus[lb],
+                z_minus[rb],
+                z_plus[eb],
+                z_minus[eb],
+            ], dim=0)
 
+            neg = torch.cat([
+                z_minus[lb],
+                z_plus[rb],
+                z_minus[eb],
+                z_plus[eb],
+            ], dim=0)
             sim_pos = F.cosine_similarity(z_anchor.expand_as(pos), pos)
             sim_neg = F.cosine_similarity(z_anchor.expand_as(neg), neg)
             triplet_loss2 = -torch.log(
@@ -522,6 +544,8 @@ class FBAgent:
             loaded_config["train"]["recon_traj_len"] = getattr(override_cfg, "recon_traj_len", 200)
             loaded_config["train"]["recon_interval"] = getattr(override_cfg, "recon_interval", 0)
             loaded_config["train"]["q_loss_coef"] = override_cfg.q_loss_coef
+            loaded_config["train"]["seq_length"] = override_cfg.seq_length
+            loaded_config["train"]["batch_size_contrastive"] = override_cfg.batch_size_contrastive
             #loaded_config["train"]["reg_coefficient"] = override_cfg.reg_coefficient
 
         agent = cls(**loaded_config)

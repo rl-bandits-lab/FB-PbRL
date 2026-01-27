@@ -111,64 +111,6 @@ def create_agent(
     return agent_config
 
 
-'''def load_data(dataset_path, expl_agent, domain_name, num_episodes=1):
-    path = Path(dataset_path) / f"{domain_name}/{expl_agent}/buffer"
-    print(f"Data path: {path}")
-    storage = {
-        "observation": [],
-        "action": [],
-        "physics": [],
-        "next": {"observation": [], "terminated": [], "physics": []},
-    }
-    files = list(path.glob("*.npz"))
-    num_episodes = min(num_episodes, len(files))
-    for i in tqdm(range(num_episodes)):
-        f = files[i]
-        data = np.load(str(f))
-        storage["observation"].append(data["observation"][:-1].astype(np.float32))
-        storage["action"].append(data["action"][1:].astype(np.float32))
-        storage["next"]["observation"].append(data["observation"][1:].astype(np.float32))
-        storage["next"]["terminated"].append(np.array(1 - data["discount"][1:], dtype=bool))
-        storage["physics"].append(data["physics"][:-1])
-        storage["next"]["physics"].append(data["physics"][1:])
-
-    for k in storage:
-        if k == "next":
-            for k1 in storage[k]:
-                storage[k][k1] = np.concatenate(storage[k][k1])
-        else:
-            storage[k] = np.concatenate(storage[k])
-    return storage
-'''
-
-'''def load_rnd_dataset(dataset_path: str, domain_name: str, expl_agent: str, num_episodes: int = 1) -> dict:
-    path = Path(dataset_path) / f"{domain_name}/{expl_agent}/buffer"
-    print(f"Data path: {path}")
-    storage = {
-    "observation": [],
-    "action": [],
-    "physics": [],
-    "next": {"observation": [], "terminated": [], "physics": []},
-    }
-    files = list(path.glob("*.npz"))
-    num_episodes = min(num_episodes, len(files))
-    for i in tqdm(range(num_episodes)):
-        f = files[i]
-        data = np.load(str(f))
-        storage["observation"].append(data["observation"][:-1].astype(np.float32))
-        storage["action"].append(data["action"][1:].astype(np.float32))
-        storage["next"]["observation"].append(data["observation"][1:].astype(np.float32))
-        storage["next"]["terminated"].append(np.array(1 - data["discount"][1:], dtype=bool))
-        storage["physics"].append(data["physics"][:-1])
-        storage["next"]["physics"].append(data["physics"][1:])
-    for k in storage:
-        if k == "next":
-            for k1 in storage[k]:
-                storage[k][k1] = np.concatenate(storage[k][k1])
-        else:
-            storage[k] = np.concatenate(storage[k])
-    return storage'''
-
 def load_rnd_dataset(dataset_path: str, domain_name: str, expl_agent: str, num_episodes: int = 1) -> dict:
     path = Path(dataset_path) / f"{domain_name}/{expl_agent.split('+')[0]}/buffer"
     print(f"Data path: {path}")

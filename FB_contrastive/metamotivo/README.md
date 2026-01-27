@@ -5,9 +5,9 @@
 
 DeepMind Control Suite (DMC) offline datasets are obtained from the ExORL RND exploration benchmark.
 
-MetaWorld offline datasets are adopted from LiRE.
+MetaWorld offline and preference datasets are adopted from LiRE.
 
-Adroit Pen preference datasets are taken from Preference Transformer.
+Adroit Pen offline and preference datasets are taken from Preference Transformer.
 
 ## Pretraining
 

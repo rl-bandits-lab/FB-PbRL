@@ -39,8 +39,8 @@ python fb_finetune_dmc_contrastive_hilp_dmc.py \
   --use_wandb \
   --contrastive_coef 100.0 \
 ```
-The argument --num_pairs controls the size of the offline preference dataset.
-The argument --noise specifies the preference noise level.
+The argument `--num_pairs` controls the size of the offline preference dataset.
+The argument `--noise` specifies the preference noise level.
 
 Offline preference datasets are collected using new_collect.py, which samples trajectory segments from the offline replay buffer and generates pairwise preferences using a scripted teacher. We collect 5,000 episodes for most DMC domains and 10,000 episodes for the PointMass domain. The teacher skip probability is set to teacher_eps_skip = 0.05 for all domains except PointMass, where it is set to 0.0.
 
@@ -56,4 +56,4 @@ python fb_finetune_dmc_contrastive_hilp_dmc_zero_shot.py \
     --use_wandb --contrastive_coef 100.0 --seq_length 25 --num_pairs 2000 \
 ```
 
-Zero-shot preference datasets are collected using new_collect_zeroshot.py. The sequence length of each trajectory segment is controlled by --seq_length, and the number of preference pairs is specified by --num_pairs.
+Zero-shot preference datasets are collected using new_collect_zeroshot.py. The sequence length of each trajectory segment is controlled by `--seq_length`, and the number of preference pairs is specified by `--num_pairs`.

@@ -1,6 +1,14 @@
 
 ---
 
+## Dataset Sources
+
+DeepMind Control Suite (DMC) offline datasets are obtained from the ExORL RND exploration benchmark.
+
+MetaWorld offline datasets are adopted from LiRE.
+
+Adroit Pen preference datasets are taken from Preference Transformer.
+
 ## Pretraining
 
 Run FB pretraining on DMC environments using offline RND datasets.
@@ -14,13 +22,15 @@ python fb_train_dmc.py \
 ```
 ## Fine-tuning
 
+### Offline PbRL protocol
+
 ```bash
 python fb_finetune_dmc_contrastive_hilp_dmc.py \
   --domain_name walker \
   --task_name run \
   --dataset_type rnd \
   --dataset_path ./datasets_dmc \
-  --load_dir ./tmp_fbcpr/8N7POP9D1B/checkpoint \
+  --load_dir pretrained_model/checkpoint \
   --num_train_steps 1000000 \
   --eval_every_steps 10000 \
   --device cuda \
@@ -29,13 +39,21 @@ python fb_finetune_dmc_contrastive_hilp_dmc.py \
   --use_wandb \
   --contrastive_coef 100.0 \
 ```
+The argument --num_pairs controls the size of the offline preference dataset.
+The argument --noise specifies the preference noise level.
+
+Offline preference datasets are collected using new_collect.py, which samples trajectory segments from the offline replay buffer and generates pairwise preferences using a scripted teacher. We collect 5,000 episodes for most DMC domains and 10,000 episodes for the PointMass domain. The teacher skip probability is set to teacher_eps_skip = 0.05 for all domains except PointMass, where it is set to 0.0.
+
+### Zero-shot RL protocol
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python fb_finetune_dmc_contrastive_hilp_dmc_zero_shot.py \
+python fb_finetune_dmc_contrastive_hilp_dmc_zero_shot.py \
     --domain_name cheetah --task_name run \
     --dataset_type rnd --dataset_path ./datasets_dmc \
-    --load_dir ./tmp_fbcpr/3NMRPDZEWL/checkpoint \
+    --load_dir pretrained_model/checkpoint \
     --num_train_steps 1000000 --eval_every_steps 10000 \
     --device cuda --use_contrastive --use_dynamic_contrastive_z \
     --use_wandb --contrastive_coef 100.0 --seq_length 25 --num_pairs 2000 \
 ```
+
+Zero-shot preference datasets are collected using new_collect_zeroshot.py. The sequence length of each trajectory segment is controlled by --seq_length, and the number of preference pairs is specified by --num_pairs.

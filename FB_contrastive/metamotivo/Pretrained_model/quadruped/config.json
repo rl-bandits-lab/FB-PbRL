@@ -1,0 +1,33 @@
+{
+    "dataset_root": "./datasets_dmc",
+    "seed": 0,
+    "dataset_type": "rnd",
+    "domain_name": "quadruped",
+    "task_name": "run",
+    "dataset_expl_agent": "rnd",
+    "num_train_steps": 3000000,
+    "load_n_episodes": 5000,
+    "log_every_updates": 10000,
+    "work_dir": "/home/jack/Desktop/meta_fb/metamotivo/tmp_fbcpr/Z229NC3LHM",
+    "checkpoint_every_steps": 1000000,
+    "num_eval_episodes": 10,
+    "num_inference_samples": 50000,
+    "eval_every_steps": 100000,
+    "eval_tasks": [
+        "walk",
+        "run",
+        "stand",
+        "jump"
+    ],
+    "compile": false,
+    "cudagraphs": false,
+    "device": "cuda",
+    "use_wandb": true,
+    "wandb_ename": null,
+    "wandb_gname": null,
+    "wandb_pname": "fb_train_dmc",
+    "wandb_name_prefix": null,
+    "use_z_noise": false,
+    "z_noise_std": 0.1,
+    "z_noise_clip": 0.3
+}

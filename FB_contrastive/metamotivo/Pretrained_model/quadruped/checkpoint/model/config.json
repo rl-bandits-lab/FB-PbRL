@@ -1,0 +1,32 @@
+{
+    "obs_dim": 78,
+    "action_dim": 12,
+    "device": "cuda",
+    "archi": {
+        "z_dim": 50,
+        "norm_z": true,
+        "f": {
+            "hidden_dim": 1024,
+            "model": "simple",
+            "hidden_layers": 1,
+            "embedding_layers": 2,
+            "num_parallel": 2,
+            "ensemble_mode": "batch"
+        },
+        "b": {
+            "hidden_dim": 256,
+            "hidden_layers": 2,
+            "norm": true
+        },
+        "actor": {
+            "hidden_dim": 1024,
+            "model": "simple",
+            "hidden_layers": 1,
+            "embedding_layers": 2
+        }
+    },
+    "inference_batch_size": 500000,
+    "seq_length": 1,
+    "actor_std": 0.2,
+    "norm_obs": false
+}

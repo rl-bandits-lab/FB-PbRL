@@ -7,7 +7,7 @@ DeepMind Control Suite (DMC) offline datasets are obtained from the ExORL RND ex
 
 MetaWorld offline and preference datasets are adopted from LiRE.
 
-Adroit Pen offline and preference datasets are taken from Preference Transformer.
+Adroit Pen offline dataset is taken from D4RL and preference dataset is taken from Preference Transformer.
 
 ## Pretraining
 ### DMC environment
@@ -29,6 +29,16 @@ python fb_train_metaworld.py \
   --env metaworld_button-press-topdown-v2 \
   --use_wandb \
   --human
+```
+
+### Adroit Pen environment
+```bash
+python fb_train_d4rl_adroit_tdjepa.py \
+  --domain_name pen \
+  --env_name pen-human-v1 \
+  --eval_envs pen-human-v1 \
+  --device cuda \
+  --use_wandb
 ```
 ## Fine-tuning
 
@@ -83,5 +93,22 @@ python fb_finetune_metaword_contrastive.py \
   --contrastive_coef 100.0 \
   --human \
   --segment_size 25 \
+  --use_wandb
+```
+
+### Adroit Pen fine-tuning
+
+```bash
+python fb_finetune_d4rl_flowbc.py \
+  --env_name pen-cloned-v1 \
+  --checkpoint pretrained_model/checkpoint \
+  --use_contrastive \
+  --use_dynamic_contrastive_z \
+  --contrastive_coef 100.0 \
+  --device cuda \
+  --query_len 100 \
+  --bs 64 \
+  --lr_b 1e-5 \
+  --ortho_coef 1000 \
   --use_wandb
 ```

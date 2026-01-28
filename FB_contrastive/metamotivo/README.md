@@ -112,3 +112,9 @@ python fb_finetune_d4rl_flowbc.py \
   --ortho_coef 1000 \
   --use_wandb
 ```
+
+
+## Codebase
+
+This repository is based on the codebase of *Zero-Shot Whole-Body Humanoid Control via Behavioral Foundation Models*. 
+We modified and extended the original implementation for our problem setting and experiments, including data processing, finetuning pipeline, and evaluation. 

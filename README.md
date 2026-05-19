@@ -10,6 +10,10 @@ Jun-Jie Yang, Chia-Heng Hsu, Kui-Yuan Chen, Ping-Chun Hsieh
 
 *International Conference on Machine Learning (ICML), 2026*
 
+## Overview
+
+**FB-PbRL** is a reward-free representation learning framework for offline preference-based reinforcement learning. The method first learns latent successor-measure representations from reward-free offline data using Forward-Backward (FB) representation learning, and then adapts these representations through contrastive search and preference-guided fine-tuning.
+
 ## Code Structure
 ```
 FB-PbRL/

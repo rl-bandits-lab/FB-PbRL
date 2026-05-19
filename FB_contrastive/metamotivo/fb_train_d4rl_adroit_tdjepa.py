@@ -1,4 +1,10 @@
-
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the CC BY-NC 4.0 license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# This file has been modified for the paper "From Reward-Free Representations
+# to Preferences: Rethinking Offline Preference-Based Reinforcement Learning", 2026.
 
 from __future__ import annotations
 import torch

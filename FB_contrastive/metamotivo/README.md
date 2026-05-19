@@ -116,8 +116,6 @@ python fb_finetune_d4rl_flowbc.py \
 
 ## Codebase
 
-## Codebase
-
 This repository is based on the codebase of **Zero-Shot Whole-Body Humanoid Control via Behavioral Foundation Models**.
 
 The original source code is copyright © Meta Platforms, Inc. and affiliates, and is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license.

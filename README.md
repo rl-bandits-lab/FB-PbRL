@@ -1,14 +1,14 @@
 # FB-PbRL
 
 <p align="center">
-  <img src="assets/fb_pbrl.pdf" alt="From Reward-Free Representations to Preferences" width="700">
+  <img src="assets/fb_pbrl.png" alt="From Reward-Free Representations to Preferences" width="700">
 </p>
 
 **From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning**
 
 Jun-Jie Yang, Chia-Heng Hsu, Kui-Yuan Chen, Ping-Chun Hsieh
 
-*International Conference on Machine Learning (ICML), May 2026*
+*International Conference on Machine Learning (ICML), 2026*
 
 ## Code Structure
 ```
@@ -60,4 +60,9 @@ The core dependencies are:
 - Weights & Biases (`wandb`)
 
 For a complete description of the environment setup, package requirements, and additional configuration details, please refer to the [`metamotivo` README](FB_contrastive/metamotivo/README.md).
+
+## Citation
+
+If you find this repository useful, please consider citing our work:
+
 

@@ -61,6 +61,14 @@ The core dependencies are:
 
 For a complete description of the environment setup, package requirements, and additional configuration details, please refer to the [`metamotivo` README](FB_contrastive/metamotivo/README.md).
 
+## Codebase
+
+This repository is based on the codebase of **Zero-Shot Whole-Body Humanoid Control via Behavioral Foundation Models**.
+
+The original source code is copyright © Meta Platforms, Inc. and affiliates, and is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license.
+
+We modified and extended the original implementation for our problem setting and experiments, including data processing, the finetuning pipeline, and evaluation.
+
 ## Citation
 
 If you find this repository useful, please consider citing our work:

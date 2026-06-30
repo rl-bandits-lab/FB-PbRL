@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="title" content="FB-PbRL - From Reward-Free Representations to Preferences">
+  <meta name="description" content="From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning.">
+  <meta name="keywords" content="preference-based reinforcement learning, reward-free reinforcement learning, offline reinforcement learning, Forward-Backward representations, successor measure, contrastive learning, SimCLR, ICML 2026">
+  <meta name="author" content="Jun-Jie Yang, Chia-Heng Hsu, Kui-Yuan Chen, Ping-Chun Hsieh">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RL Bandits Lab">
+  <meta property="og:title" content="From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning">
+  <meta property="og:description" content="FB-PbRL learns reusable Forward-Backward structure from reward-free data and uses preferences to specify the task direction.">
+  <meta property="og:url" content="https://rl-bandits-lab.github.io/FB-PbRL/">
+  <meta property="og:image" content="https://rl-bandits-lab.github.io/FB-PbRL/static/images/tldr_image.png">
+  <meta property="og:image:alt" content="FB-PbRL TL;DR teaser">
+  <meta property="article:published_time" content="2026-01-01T00:00:00.000Z">
+  <meta property="article:author" content="Jun-Jie Yang">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="Preference-Based Reinforcement Learning">
+  <meta property="article:tag" content="Reward-Free Representation Learning">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FB-PbRL: From Reward-Free Representations to Preferences">
+  <meta name="twitter:description" content="Rethinking offline preference-based reinforcement learning through reward-free Forward-Backward representations.">
+  <meta name="twitter:image" content="https://rl-bandits-lab.github.io/FB-PbRL/static/images/tldr_image.png">
+  <meta name="twitter:image:alt" content="FB-PbRL TL;DR teaser">
+
+  <meta name="citation_title" content="From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning">
+  <meta name="citation_author" content="Yang, Jun-Jie">
+  <meta name="citation_author" content="Hsu, Chia-Heng">
+  <meta name="citation_author" content="Chen, Kui-Yuan">
+  <meta name="citation_author" content="Hsieh, Ping-Chun">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_conference_title" content="International Conference on Machine Learning">
+  <meta name="citation_pdf_url" content="https://rl-bandits-lab.github.io/FB-PbRL/static/pdfs/ICML26_FB_PbRL_camera_ready.pdf">
+
+  <meta name="theme-color" content="#0b2d4d">
+  <meta name="msapplication-TileColor" content="#0b2d4d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>FB-PbRL | ICML 2026</title>
+
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning",
+    "description": "FB-PbRL connects reward-free Forward-Backward representations with preference-based reinforcement learning for feedback-efficient offline control.",
+    "author": [
+      {"@type": "Person", "name": "Jun-Jie Yang", "affiliation": {"@type": "Organization", "name": "National Yang Ming Chiao Tung University"}},
+      {"@type": "Person", "name": "Chia-Heng Hsu", "affiliation": {"@type": "Organization", "name": "National Yang Ming Chiao Tung University"}},
+      {"@type": "Person", "name": "Kui-Yuan Chen", "affiliation": {"@type": "Organization", "name": "National Yang Ming Chiao Tung University"}},
+      {"@type": "Person", "name": "Ping-Chun Hsieh", "affiliation": {"@type": "Organization", "name": "National Yang Ming Chiao Tung University"}}
+    ],
+    "datePublished": "2026",
+    "publisher": {"@type": "Organization", "name": "International Conference on Machine Learning"},
+    "url": "https://rl-bandits-lab.github.io/FB-PbRL/",
+    "image": "https://rl-bandits-lab.github.io/FB-PbRL/static/images/tldr_image.png",
+    "keywords": ["preference-based reinforcement learning", "reward-free reinforcement learning", "offline reinforcement learning", "Forward-Backward representations", "contrastive learning"],
+    "isAccessibleForFree": true
+  }
+  </script>
+
+  <style>
+    :root {
+      --fb-navy: #0b2d4d;
+      --fb-teal: #0f7c80;
+      --fb-copper: #c9782d;
+      --fb-ink: #1f2933;
+      --fb-muted: #52606d;
+      --fb-bg: #f7f9fb;
+      --fb-card: #ffffff;
+      --fb-border: #d9e2ec;
+      --fb-soft-teal: rgba(15, 124, 128, 0.10);
+      --fb-soft-copper: rgba(201, 120, 45, 0.13);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--fb-ink);
+      background: #ffffff;
+    }
+
+    .hero.is-fb {
+      background:
+        radial-gradient(circle at top left, rgba(15, 124, 128, 0.14), transparent 34%),
+        linear-gradient(180deg, #f8fbfc 0%, #ffffff 100%);
+      border-bottom: 1px solid var(--fb-border);
+    }
+
+    .hero .hero-body { padding-top: 4.3rem; padding-bottom: 3.4rem; }
+
+    .title-container {
+      width: min(1420px, calc(100vw - 2rem));
+      margin: 0 auto;
+    }
+
+    .publication-title {
+      max-width: 1380px;
+      margin: 0 auto 1.15rem;
+      letter-spacing: -0.04em;
+      line-height: 1.12;
+      color: var(--fb-navy);
+      font-weight: 800;
+      font-size: clamp(2.05rem, 3vw, 3.35rem) !important;
+    }
+
+    .publication-title .title-line {
+      white-space: nowrap;
+    }
+
+    .venue-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      background: var(--fb-soft-teal);
+      color: var(--fb-teal);
+      font-weight: 700;
+      margin-bottom: 1.1rem;
+    }
+
+    .publication-authors a,
+    .publication-authors span { color: var(--fb-ink); }
+
+    .publication-links { margin-top: 1.25rem; }
+
+    .publication-links .button {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .publication-links .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(11, 45, 77, 0.14);
+    }
+
+    .section-title {
+      color: var(--fb-navy);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .lead-text {
+      font-size: 1.12rem;
+      line-height: 1.75;
+      color: var(--fb-muted);
+    }
+
+    .teaser-card,
+    .figure-card,
+    .method-card,
+    .video-card,
+    .content-box {
+      border: 1px solid var(--fb-border);
+      border-radius: 20px;
+      background: var(--fb-card);
+      box-shadow: 0 18px 50px rgba(11, 45, 77, 0.10);
+      padding: 1.35rem;
+    }
+
+    .teaser-image,
+    .figure-image {
+      width: 100%;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid #e6edf3;
+      background: #ffffff;
+    }
+
+    .figure-caption {
+      max-width: 940px;
+      margin: 1rem auto 0;
+      color: var(--fb-muted);
+      line-height: 1.65;
+    }
+
+    .tldr-box {
+      margin-top: 1.35rem;
+      border-left: 6px solid var(--fb-copper);
+      border-radius: 16px;
+      background: #fff8ee;
+      padding: 1.35rem 1.55rem;
+      text-align: left;
+    }
+
+    .tldr-box p {
+      font-size: clamp(1.05rem, 1.55vw, 1.35rem);
+      line-height: 1.5;
+      color: #334e68;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .tldr-box strong { color: #8a4b15; font-weight: 800; }
+
+    .abstract-grid,
+    .bottleneck-grid,
+    .component-grid,
+    .robustness-grid,
+    .video-grid {
+      display: grid;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .abstract-grid { grid-template-columns: 1fr; }
+    .bottleneck-grid { grid-template-columns: 0.92fr 1.08fr; }
+    .component-grid { grid-template-columns: 1fr; align-items: stretch; }
+    .robustness-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .content-box {
+      box-shadow: 0 8px 28px rgba(11, 45, 77, 0.06);
+    }
+
+    .content-box p,
+    .content-box li,
+    .method-card p,
+    .video-card p {
+      color: var(--fb-muted);
+      line-height: 1.7;
+    }
+
+    .content-box h3,
+    .method-card h3,
+    .video-card h3 {
+      color: var(--fb-navy);
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+
+    .content-box ul {
+      margin-top: 0.75rem;
+    }
+
+    .bottleneck-list {
+      margin-bottom: 1rem;
+    }
+
+    .bottleneck-list li {
+      margin-bottom: 0.55rem;
+    }
+
+    .bottleneck-main {
+      color: var(--fb-navy) !important;
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.55;
+      margin-bottom: 1.05rem;
+    }
+
+    .bottleneck-support {
+      color: var(--fb-muted) !important;
+      font-size: 1.02rem;
+      font-weight: 500;
+      line-height: 1.65;
+      margin-bottom: 0.75rem;
+    }
+
+    .key-message {
+      max-width: 920px;
+      margin: 1.2rem auto 0;
+      border-left: 4px solid rgba(201, 120, 45, 0.55);
+      border-radius: 14px;
+      background: rgba(201, 120, 45, 0.055);
+      padding: 0.95rem 1.15rem;
+      color: var(--fb-navy);
+      font-weight: 800;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .key-message span {
+      color: var(--fb-navy);
+    }
+
+    .bottleneck-after {
+      max-width: 920px;
+      margin: 0.85rem auto 0;
+      color: var(--fb-muted);
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .framework-card {
+      text-align: center;
+    }
+
+    .framework-image {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+      display: block;
+      object-fit: contain;
+      image-rendering: auto;
+    }
+
+
+    .stage-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.1rem;
+      text-align: left;
+    }
+
+    .stage-item {
+      text-align: left;
+      border: 1px solid var(--fb-border);
+      border-radius: 16px;
+      padding: 1.05rem 1.15rem;
+      background: #fbfdfe;
+    }
+
+    .stage-title {
+      display: block;
+      color: var(--fb-navy);
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+      line-height: 1.25;
+    }
+
+    .stage-body {
+      display: block;
+      color: var(--fb-muted);
+      line-height: 1.6;
+    }
+
+    .method-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .method-number {
+      width: 2.2rem;
+      height: 2.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--fb-navy);
+      color: white;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+    }
+
+    .pill {
+      display: inline-block;
+      width: fit-content;
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--fb-teal);
+      background: var(--fb-soft-teal);
+      margin-bottom: 0.75rem;
+    }
+
+    .math-display {
+      border-radius: 14px;
+      background: #ffffff;
+      border: 1px solid #cfd9e3;
+      padding: 1rem 1.1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+      color: #172033;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4);
+    }
+
+    .math-display mjx-container {
+      margin: 0 !important;
+      font-size: 118% !important;
+    }
+
+    .component-figure {
+      margin-top: auto;
+      padding-top: 0.7rem;
+    }
+
+    .component-figure img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid #e6edf3;
+      background: #ffffff;
+    }
+
+    .result-copy {
+      margin-bottom: 1.25rem;
+    }
+
+    .result-copy p {
+      color: var(--fb-muted);
+      line-height: 1.7;
+      margin-bottom: 0.8rem;
+    }
+
+    .tabs-wrap {
+      border: 1px solid var(--fb-border);
+      border-radius: 20px;
+      background: #ffffff;
+      box-shadow: 0 18px 50px rgba(11, 45, 77, 0.08);
+      padding: 1rem;
+    }
+
+    .table-tabs {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .table-tab {
+      border: 1px solid var(--fb-border);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--fb-navy);
+      font-weight: 800;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .table-tab:hover,
+    .table-tab.is-active {
+      color: #ffffff;
+      background: var(--fb-navy);
+      border-color: var(--fb-navy);
+    }
+
+    .table-panel { display: none; }
+    .table-panel.is-active { display: block; }
+
+    .results-image {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .note {
+      color: var(--fb-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    .video-card video {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--fb-border);
+      background: #000;
+    }
+
+    pre {
+      border-radius: 14px;
+      background: #102a43;
+      color: #e0f2f1;
+      padding: 1.2rem;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .footer {
+      background: #f7f9fb;
+      border-top: 1px solid var(--fb-border);
+      color: var(--fb-muted);
+      padding: 2rem 1.5rem;
+    }
+
+    @media screen and (max-width: 1200px) {
+      .publication-title .title-line { white-space: normal; }
+    }
+
+    @media screen and (max-width: 1050px) {
+      .bottleneck-grid,
+      .component-grid,
+      .robustness-grid,
+      .video-grid { grid-template-columns: 1fr; }
+    }
+
+    @media screen and (max-width: 700px) {
+      .hero .hero-body { padding-top: 3rem; padding-bottom: 2.5rem; }
+      .publication-title { font-size: 2rem !important; }
+      .stage-list { grid-template-columns: 1fr; }
+      .teaser-card,
+      .figure-card,
+      .method-card,
+      .video-card,
+      .tabs-wrap,
+      .content-box { padding: 0.85rem; }
+      .math-display mjx-container { font-size: 100% !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+    <section class="hero is-fb">
+      <div class="hero-body">
+        <div class="title-container has-text-centered">
+          <div class="venue-badge">
+            <i class="fas fa-award"></i>
+            ICML 2026
+          </div>
+
+          <h1 class="title publication-title">
+            <span class="title-line">From Reward-Free Representations to Preferences:</span><br>
+            <span class="title-line">Rethinking Offline Preference-Based Reinforcement Learning</span>
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Jun-Jie Yang</span>,
+            <span class="author-block">Chia-Heng Hsu</span>,
+            <span class="author-block">Kui-Yuan Chen</span>,
+            <span class="author-block">Ping-Chun Hsieh</span>
+          </div>
+
+          <div class="is-size-5 publication-authors" style="margin-top: 0.65rem;">
+            <span class="author-block">
+              Department of Computer Science<br>
+              National Yang Ming Chiao Tung University
+            </span>
+          </div>
+
+          <div class="publication-links">
+            <span class="link-block">
+              <a href="static/pdfs/ICML26_FB_PbRL_camera_ready.pdf" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://github.com/rl-bandits-lab/FB-PbRL" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code</span>
+              </a>
+            </span>
+            <span class="link-block">
+              <a href="https://arxiv.org/abs/2606.01123" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                <span class="icon"><i class="ai ai-arxiv"></i></span>
+                <span>arXiv</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <div class="teaser-card">
+          <img class="teaser-image" src="static/images/tldr_image.png" alt="FB-PbRL TL;DR teaser image">
+        </div>
+        <div class="tldr-box">
+          <p>
+            <strong>TL;DR.</strong>
+            Learn reusable Forward-Backward structure from reward-free data; use preferences to specify the task direction.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="abstract">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">Abstract</h2>
+        </div>
+        <div class="content-box">
+          <p>
+            Preference-based reinforcement learning (PbRL) avoids explicit reward engineering by learning from pairwise
+            human preference feedback. Existing offline PbRL methods typically first learn a reward or preference model
+            from labeled preferences, then perform offline RL on unlabeled data. We revisit offline PbRL through the lens
+            of reward-free representation learning (RFRL), and propose FB-PbRL: a framework that first learns latent
+            successor-measure representations from reward-free offline data, followed by contrastive search and
+            preference-guided fine-tuning.
+          </p>
+          <p>
+            Through extensive experiments and ablations, FB-PbRL achieves superior preference efficiency over offline
+            PbRL baselines and highlights the potential of connecting RFRL with PbRL as a feedback-efficient solution.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="bottleneck">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">The Bottleneck of PbRL</h2>
+        </div>
+        <div class="bottleneck-grid">
+          <div class="content-box">
+            <p class="bottleneck-main">Limited preferences make reward models overfit and collapse.</p>
+            <p class="bottleneck-support">Human feedback is expensive and severely limited.</p>
+            <p class="bottleneck-support">The learned BT reward, a proxy reward trained from pairwise preferences, collapses toward the mid-range and fails to capture the underlying true reward structure.</p>
+          </div>
+          <div class="figure-card">
+            <img class="figure-image" src="static/images/walker_run_flip.png" alt="Reward model bottleneck on Walker Run and Walker Flip">
+            <p class="figure-caption has-text-centered">
+              Reward over-optimization under proxy BT rewards on Walker Run and Walker Flip.
+            </p>
+          </div>
+        </div>
+        <div class="key-message">
+          Limited preferences should <span>specify the task direction</span>, not learn the entire reward model.
+        </div>
+        <p class="bottleneck-after">
+          
+        </p>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="framework">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">Training Pipeline of FB-PbRL</h2>
+          <p class="lead-text" style="max-width: 920px; margin: 0 auto;">
+            FB-PbRL adapts Forward-Backward representation learning to offline PbRL by decoupling structure learning
+            from preference-based task specification.
+          </p>
+        </div>
+
+        <div class="teaser-card framework-card">
+          <img class="teaser-image framework-image" src="static/images/framework_new.png" alt="FB-PbRL training pipeline framework">
+          <div class="stage-list">
+            <div class="stage-item">
+              <span class="stage-title">Stage 1:<br>FB Pre-training</span>
+              <span class="stage-body">Learn dynamics-aware Forward-Backward representations from reward-free offline data.</span>
+            </div>
+            <div class="stage-item">
+              <span class="stage-title">Stage 2:<br>Preference-Guided Fine-Tuning</span>
+              <span class="stage-body">Update the task anchor <em>z</em><sup>*</sup> and fine-tune FB representations using preference segments.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="method">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">Two Core Components</h2>
+          <p class="lead-text" style="max-width: 920px; margin: 0 auto;">
+            FB-PbRL uses preferences only where they are most useful: identifying the desired latent task direction and
+            reshaping the representation geometry around that direction.
+          </p>
+        </div>
+
+        <div class="component-grid">
+          <div class="method-card">
+            <div class="method-number">1</div>
+            <h3>Latent task specification through $\mathcal{L}_{\mathrm{pref}}$</h3>
+            <p>
+              Under the FB structure, the Bradley–Terry preference loss can be rewritten purely in terms of the latent task
+              vector $z$. Preferred and non-preferred trajectory segments become positive and negative latent directions.
+            </p>
+            <div class="math-display">
+              $$
+              \mathcal{L}_{\mathrm{pref}}(z;\bar{\omega})
+              = -\mathbb{E}\left[\log
+              \frac{\exp\left(z^\top z^+_{\sigma}\right)}
+              {\exp\left(z^\top z^+_{\sigma}\right)+\exp\left(z^\top z^-_{\sigma}\right)}
+              \right].
+              $$
+            </div>
+            <p>
+              This avoids training a reward model. Instead, FB-PbRL optimizes a low-dimensional task vector, which is
+              substantially simpler than fitting a high-capacity neural reward model from scarce preference labels.
+            </p>
+          </div>
+
+          <div class="method-card">
+            <div class="method-number">2</div>
+            <h3>Preference-Guided Fine-Tuning</h3>
+            <p>
+              Pure test-time search can be limited because pre-trained FB representations are task-agnostic. PG-FT adapts
+              the FB latent geometry using $\mathcal{L}_{\mathrm{pref}}$, making task directions easier to identify and exploit.
+            </p>
+            <p>
+              The final task anchor moves toward high-return, in-distribution regions that the latent-conditioned policy can
+              reliably execute, improving downstream control without explicit reward or preference model learning.
+            </p>
+            <div class="component-figure">
+              <img src="static/images/pg_ft.png" alt="Preference-Guided Fine-Tuning reshapes the latent geometry" onerror="this.style.display='none';">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="main-results">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 1.6rem;">
+          <h2 class="title is-3 section-title">Main Results</h2>
+        </div>
+
+        <div class="result-copy content-box">
+          <p>
+            Under the PbRL protocol, Ours-T already shows that pretrained FB representations support preference-based
+            task specification; Ours-FT further boosts performance by jointly fine-tuning the representation and task anchor.
+          </p>
+          <p>
+            Under the zero-shot RFRL protocol, FB-PbRL uses preferences instead of ground-truth reward labels, yet remains
+            competitive with reward-based task specification baselines.
+          </p>
+        </div>
+
+        <div class="tabs-wrap">
+          <div class="table-tabs" role="tablist" aria-label="Main result tables">
+            <button class="table-tab is-active" type="button" data-target="table-pbrl">Table 1: PbRL Protocol</button>
+            <button class="table-tab" type="button" data-target="table-rfrl">Table 2: Zero-Shot RFRL Protocol</button>
+          </div>
+
+          <div id="table-pbrl" class="table-panel is-active">
+            <img class="results-image" src="static/images/table1.png" alt="Table 1: Performance on DMC under the PbRL Protocol">
+            <p class="note has-text-centered" style="margin-top: 0.8rem;">
+              Ours-T denotes test-time task specification, while Ours-FT applies preference-guided fine-tuning.
+            </p>
+          </div>
+
+          <div id="table-rfrl" class="table-panel">
+            <img class="results-image" src="static/images/table2.png" alt="Table 2: Performance on DMC under the Zero-Shot RFRL Protocol">
+            <p class="note has-text-centered" style="margin-top: 0.8rem;">
+              Zero-shot RFRL baselines use ground-truth rewards at test time, whereas FB-PbRL uses preferences.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="robustness">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">Robustness to Limited and Noisy Preferences</h2>
+          <p class="lead-text" style="max-width: 920px; margin: 0 auto;">
+            FB-PbRL remains effective when preference labels are scarce or imperfect, demonstrating that the learned
+            reward-free representations reduce the burden on human feedback.
+          </p>
+        </div>
+
+        <div class="robustness-grid">
+          <div class="figure-card">
+            <img class="figure-image" src="static/images/robust_pairs.png" alt="Robustness under limited preference pairs">
+            <p class="figure-caption has-text-centered">
+              <strong>Limited preferences.</strong> Performance degrades gracefully when reducing the preference budget.
+            </p>
+          </div>
+          <div class="figure-card">
+            <img class="figure-image" src="static/images/robust_noise.png" alt="Robustness under noisy preference labels">
+            <p class="figure-caption has-text-centered">
+              <strong>Noisy preferences.</strong> FB-PbRL remains robust under moderate preference noise.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section hero is-light" id="manipulation">
+      <div class="container is-max-desktop">
+        <div class="has-text-centered" style="margin-bottom: 2rem;">
+          <h2 class="title is-3 section-title">Robot Arm Manipulation with Real Human Preferences</h2>
+          <p class="lead-text" style="max-width: 920px; margin: 0 auto;">
+            FB-PbRL also generalizes to high-dimensional manipulation tasks with real human preference labels.
+            The videos below show the <strong>pen-human</strong> environment.
+          </p>
+        </div>
+
+        <div class="video-grid">
+          <div class="video-card">
+            <h3>LiRE</h3>
+            <video controls muted loop preload="metadata">
+              <source src="static/videos/LiRE.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <p class="has-text-centered" style="margin-top: 0.8rem;">Baseline result on pen-human.</p>
+          </div>
+          <div class="video-card">
+            <h3>FB-PbRL (Ours)</h3>
+            <video controls muted loop preload="metadata">
+              <source src="static/videos/pen_breeze.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <p class="has-text-centered" style="margin-top: 0.8rem;">Preference-guided FB-PbRL result on pen-human.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3 section-title">BibTeX</h2>
+<pre id="bibtex-code"><code>@inproceedings{
+yang2026from,
+title={From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning},
+author={Jun-Jie Yang and Chia-Heng Hsu and Kui-Yuan Chen and Ping-Chun Hsieh},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=sGOmm03F40}
+}</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <p>
+          Page template adapted from the
+          <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.<br>
+          Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC BY-SA 4.0</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabs = document.querySelectorAll('.table-tab');
+      const panels = document.querySelectorAll('.table-panel');
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          const target = tab.getAttribute('data-target');
+
+          tabs.forEach(function (t) { t.classList.remove('is-active'); });
+          panels.forEach(function (p) { p.classList.remove('is-active'); });
+
+          tab.classList.add('is-active');
+          document.getElementById(target).classList.add('is-active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

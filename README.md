@@ -77,4 +77,13 @@ We modified and extended the original implementation for our problem setting and
 
 If you find this repository useful, please consider citing our work:
 
-
+```
+@inproceedings{
+yang2026from,
+title={From Reward-Free Representations to Preferences: Rethinking Offline Preference-Based Reinforcement Learning},
+author={Jun-Jie Yang and Chia-Heng Hsu and Kui-Yuan Chen and Ping-Chun Hsieh},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=sGOmm03F40}
+}
+```
